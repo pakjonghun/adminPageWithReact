@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { Navigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
@@ -12,7 +12,11 @@ type LocationProps = {
 
 const Login: FC = () => {
   const location = useLocation();
-  const [isLoggedIn, seIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    return () => setIsLoggedIn(false);
+  });
 
   const {
     register,
@@ -22,8 +26,8 @@ const Login: FC = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = async (value) => {
     try {
-      await axios.post("/users/login", value, { withCredentials: true });
-      seIsLoggedIn(true);
+      await axios.post("/users/login", value);
+      setIsLoggedIn(true);
     } catch (err) {
       alert("err");
     }
@@ -39,7 +43,7 @@ const Login: FC = () => {
 
         <label htmlFor="floatingInput">Email address</label>
         <input
-          value={lo.email ? lo.email : ""}
+          value={lo?.email ? lo.email : ""}
           {...register("email", {
             required: { value: true, message: "input email" },
             pattern: {
@@ -54,7 +58,7 @@ const Login: FC = () => {
         {errors?.email && <ErrorMessage message={errors.email.message} />}
         <label htmlFor="floatingPassword">Password</label>
         <input
-          value={lo.password ? lo.password : ""}
+          value={lo?.password ? lo.password : ""}
           {...register("password", {
             required: { value: true, message: "password plz" },
           })}
