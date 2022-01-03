@@ -1,6 +1,8 @@
+import { FC } from "react";
 import Wrapper from "../components/Wrapper";
 
-const Dashboard = () => {
+const Dashboard: FC = (props) => {
+  console.log(props);
   return <Wrapper>Dashboard</Wrapper>;
 };
 

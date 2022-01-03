@@ -1,5 +1,7 @@
-import { FC, useEffect } from "react";
+import axios from "axios";
+import { FC, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { Navigate } from "react-router-dom";
 import styled from "styled-components";
 import ErrorMessage from "../components/ErrorMessage";
 import "../Login.css";
@@ -11,27 +13,23 @@ const Register: FC = () => {
     setError,
     getValues,
     clearErrors,
-    watch,
     formState: { errors, isValid },
   } = useForm({ mode: "onChange" });
 
-  // useEffect(() => {
-  //   const { password, passwordConfirm } = getValues();
-  //   console.log(passwordConfirm, passwordConfirm);
-  //   if (password !== passwordConfirm) {
-  //     setError("passwordConfirm", {
-  //       type: "passwordConfirm",
-  //       message: "password doesnt match",
-  //     });
-  //   } else {
-  //     clearErrors("passwordConfirm");
-  //   }
-  // }, [setError, clearErrors, getValues]);
-
-  console.log(errors, isValid);
-  const onSubmit: SubmitHandler<FieldValues> = (value) => {
-    const { password, passwordConfirm, ...rest } = value;
+  const [isRegistered, setIsRegistered] = useState<boolean>(false);
+  const onSubmit: SubmitHandler<FieldValues> = async (value) => {
+    try {
+      await axios.post("/users/register", value);
+      setIsRegistered(true);
+    } catch (e) {
+      alert("signin failed");
+    }
   };
+
+  if (isRegistered) {
+    const { email, password } = getValues();
+    return <Navigate replace to="/login" state={{ email, password }} />;
+  }
 
   return (
     <main className="form-signin">
