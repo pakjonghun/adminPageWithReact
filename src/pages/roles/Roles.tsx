@@ -73,12 +73,8 @@ const Roles = () => {
                 <td>{item.id}</td>
                 <td>{item.name}</td>
                 <td>
-                  {roles.map((role) => {
-                    if (!role.permissions?.length) return "none";
-                    return role.permissions.map((per) => (
-                      <div key={per.id}>{per.name}</div>
-                    ));
-                  })}
+                  {item.permissions &&
+                    item.permissions.map((jtem) => jtem.name).join(", ")}
                 </td>
                 <td>
                   <div className="btn-group mr-2">

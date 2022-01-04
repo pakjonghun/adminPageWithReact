@@ -21,10 +21,6 @@ const RoleCreate: FC = () => {
 
   const [choicePer, setChoicePer] = useState<Array<number>>([]);
 
-  const onClick = (id: number) => {
-    setChoicePer((pre) => [...pre, id]);
-  };
-
   useEffect(() => {
     (async () => {
       try {
@@ -40,6 +36,13 @@ const RoleCreate: FC = () => {
     })();
   }, [meta]);
 
+  const onChange = (id: number) => {
+    setChoicePer((pre) => {
+      if (!pre.some((p) => p === id)) return [...pre, id];
+      return pre.filter((item) => item !== id);
+    });
+  };
+
   const {
     register,
     handleSubmit,
@@ -48,9 +51,6 @@ const RoleCreate: FC = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = async (value) => {
     try {
-      console.log(value);
-      console.log(choicePer);
-
       await axios.post("/roles/register", { ...value, permissions: choicePer });
       setIsRegistered(true);
     } catch (e) {
@@ -59,7 +59,7 @@ const RoleCreate: FC = () => {
   };
 
   if (isRegistered) {
-    return <Navigate replace to="/dashboard" />;
+    return <Navigate replace to="/roles" />;
   }
 
   return (
@@ -80,26 +80,25 @@ const RoleCreate: FC = () => {
           <ErrorMessage message={errors.name.message} />
         )}
 
-        <div
-          className="btn-group"
-          role="group"
-          aria-label="Basic checkbox toggle button group"
-        >
+        <div className="mb-10 row">
+          <label htmlFor="floatingInput" className="checkTitle">
+            Permissions
+          </label>
           {permissions.map((per) => {
             const id = Math.random().toString(20).substring(2, 12);
             return (
-              <React.Fragment key={per.id}>
+              <div className="form-check form-check-inline col-5" key={per.id}>
                 <input
-                  onClick={() => onClick(per.id)}
-                  className="btn-check"
+                  onChange={() => onChange(per.id)}
+                  className="form-check-input"
                   type="checkbox"
                   value={per.id}
                   id={id}
                 />
-                <label className="btn btn-outline-primary" htmlFor={id}>
+                <label className="form-check-label" htmlFor={id}>
                   {per.name}
                 </label>
-              </React.Fragment>
+              </div>
             );
           })}
         </div>
