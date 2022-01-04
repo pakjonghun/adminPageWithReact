@@ -28,6 +28,11 @@ const Menu = () => {
               Register
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink to="/roles" className="nav-link active">
+              Role
+            </NavLink>
+          </li>
         </ul>
       </div>
     </nav>

@@ -5,6 +5,9 @@ import "./App.css";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import RoleCreate from "./pages/roles/CreateRole";
+import RoleEdit from "./pages/roles/EditRole";
+import Roles from "./pages/roles/Roles";
 import UserCreate from "./pages/user/UserCreate";
 import UserEdit from "./pages/user/UserEdit";
 import Users from "./pages/user/Users";
@@ -21,6 +24,11 @@ function App() {
           <Route path="/users">
             <Route path="create" element={<UserCreate />} />
             <Route path=":id/edit" element={<UserEdit />} />
+          </Route>
+          <Route path="/roles">
+            <Route path="" element={<Roles />} />
+            <Route path="create" element={<RoleCreate />} />
+            <Route path=":id/edit" element={<RoleEdit />} />
           </Route>
         </Routes>
       </BrowserRouter>
