@@ -4,14 +4,26 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { Navigate, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import ErrorMessage from "../../components/ErrorMessage";
+import { IRole } from "../../model/role";
 import { IUser, User } from "../../model/user";
 
 const UserEdit: FC = () => {
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
-  const [user, setUser] = useState<IUser>(new User(0, "", "", ""));
   const { id } = useParams();
   const lo = useLocation();
   const location = lo.state as IUser;
+  const [roles, setRoles] = useState<IRole[]>([{ name: "", id: 0 }]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get<{ data: IRole[] }>("/roles");
+        setRoles(data.data);
+      } catch (err) {
+        alert("err");
+      }
+    })();
+  }, []);
 
   const {
     register,
@@ -23,6 +35,7 @@ const UserEdit: FC = () => {
       firstname: location?.firstname,
       lastname: location?.lastname,
       email: location?.email,
+      roleId: location?.role?.id,
     },
   });
 
@@ -38,7 +51,6 @@ const UserEdit: FC = () => {
   if (isRegistered) {
     return <Navigate replace to="/users" />;
   }
-  console.log(user);
 
   return (
     <main className="form-signin">
@@ -86,7 +98,25 @@ const UserEdit: FC = () => {
         {errors?.lastname?.message && (
           <ErrorMessage message={errors.lastname.message} />
         )}
-
+        <label htmlFor="floatingRole">RoleId</label>
+        <select
+          {...register("roleId", {
+            required: { value: true, message: "input lastname" },
+          })}
+          className="form-control"
+          id="floatingRole"
+          placeholder="roleId"
+        >
+          <option>Select...</option>
+          {roles.map((role) => (
+            <option key={role.id} value={role.id}>
+              {role.name}
+            </option>
+          ))}
+        </select>
+        {errors?.roleId?.message && (
+          <ErrorMessage message={errors.roleId.message} />
+        )}
         <SubmitBtn
           passValid={isValid}
           className="w-100 btn btn-lg btn-primary"

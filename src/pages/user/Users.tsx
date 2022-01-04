@@ -82,7 +82,7 @@ const Users = () => {
                   </div>
                   <div className="btn-group mr-2">
                     <Link
-                      to={`/users/edit/${item.id}`}
+                      to={`/users/${item.id}/edit`}
                       className="btn btn-sm btn-outline-secondary"
                       state={item}
                     >
