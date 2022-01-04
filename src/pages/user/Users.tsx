@@ -69,7 +69,7 @@ const Users = () => {
                 <td>{item.firstname}</td>
                 <td>{item.lastname}</td>
                 <td>{item.email}</td>
-                <td>{item.role.name}</td>
+                <td>{item.role?.name}</td>
                 <td>
                   <div className="btn-group mr-2">
                     <Link
@@ -78,6 +78,15 @@ const Users = () => {
                       className="btn btn-sm btn-outline-secondary"
                     >
                       Delete
+                    </Link>
+                  </div>
+                  <div className="btn-group mr-2">
+                    <Link
+                      to={`/users/edit/${item.id}`}
+                      className="btn btn-sm btn-outline-secondary"
+                      state={item}
+                    >
+                      Edit
                     </Link>
                   </div>
                 </td>

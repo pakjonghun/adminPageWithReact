@@ -4,8 +4,8 @@ export interface IUser {
   firstname: string;
   lastname: string;
   email: string;
-  role: IRole;
-  name: string;
+  role?: IRole;
+  name?: string;
 }
 
 export class User implements IUser {
