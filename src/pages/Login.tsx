@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { Navigate, useLocation } from "react-router-dom";
 import styled from "styled-components";

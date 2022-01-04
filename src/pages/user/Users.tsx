@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Wrapper from "../../components/Wrapper";
 import { IUser } from "../../model/user";
 import { Meta } from "../../model/meta";
@@ -23,6 +23,17 @@ const Users = () => {
     setPage(page - 1);
   };
 
+  const onDelete = async (id: number) => {
+    try {
+      if (window.confirm("are you sure?")) {
+        await axios.delete(`/admin/${id}`);
+        setUser((pre) => pre.filter((item) => item.id !== id));
+      }
+    } catch (error) {
+      alert("delete fail");
+    }
+  };
+
   useEffect(() => {
     (async () => {
       const { data } = await axios.get<UsersType>(`/users?page=${page}`);
@@ -33,6 +44,12 @@ const Users = () => {
 
   return (
     <Wrapper>
+      <div className="pt-3 pb-2 mb-3 border-button">
+        <Link to="/users/create" className="btn btn-sm btn-outline-secondary">
+          ADD
+        </Link>
+      </div>
+
       <div className="table-responsive">
         <table className="table table-striped table-sm">
           <thead>
@@ -52,8 +69,18 @@ const Users = () => {
                 <td>{item.firstname}</td>
                 <td>{item.lastname}</td>
                 <td>{item.email}</td>
-                <td>{item.role.id}</td>
                 <td>{item.role.name}</td>
+                <td>
+                  <div className="btn-group mr-2">
+                    <Link
+                      to="#"
+                      onClick={() => onDelete(item.id)}
+                      className="btn btn-sm btn-outline-secondary"
+                    >
+                      Delete
+                    </Link>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>

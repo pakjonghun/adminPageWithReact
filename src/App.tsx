@@ -5,6 +5,7 @@ import "./App.css";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import UserCreate from "./pages/user/UserCreate";
 import Users from "./pages/user/Users";
 
 function App() {
@@ -16,6 +17,9 @@ function App() {
           <Route path="/users" element={<Users />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/users">
+            <Route path="create" element={<UserCreate />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>
