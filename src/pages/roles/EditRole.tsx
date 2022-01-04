@@ -21,6 +21,9 @@ const EditRole: FC = () => {
 
   const [choicePer, setChoicePer] = useState<Array<number>>([]);
 
+  const state = useLocation();
+  const lo = (state.state as IRole) || [];
+
   useEffect(() => {
     (async () => {
       try {
@@ -29,22 +32,19 @@ const EditRole: FC = () => {
           meta: Meta;
         }>("/permissions");
         setPermissions(data.data);
+        setChoicePer(lo.permissions ? lo.permissions.map((p) => p.id) : []);
       } catch (err) {
         alert("err");
       }
     })();
-  }, []);
-
-  const state = useLocation();
-  const lo = state.state as IRole;
+  }, [lo.permissions]);
 
   const onChange = (id: number) => {
     setChoicePer((pre) => {
-      if (!pre.some((p) => p === id)) return [...pre, id];
-      return pre.filter((item) => item !== id);
+      if (pre.some((p) => p === id)) return pre.filter((item) => item !== id);
+      return [...pre, id];
     });
   };
-
   const {
     register,
     handleSubmit,
@@ -93,9 +93,12 @@ const EditRole: FC = () => {
           </label>
           {permissions.map((per) => {
             const id = Math.random().toString(20).substring(2, 12);
+            const isSelected =
+              lo.permissions && lo.permissions.some((p) => p.id === per.id);
             return (
               <div className="form-check form-check-inline col-5" key={per.id}>
                 <input
+                  defaultChecked={isSelected}
                   onChange={() => onChange(per.id)}
                   className="form-check-input"
                   type="checkbox"
