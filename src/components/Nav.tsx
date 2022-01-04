@@ -1,19 +1,35 @@
 import axios from "axios";
 import React, { FC, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User } from "./Wrapper";
+import { Role } from "../model/role";
+import { IUser, User } from "../model/user";
 
-type NavProps = {
-  setUser: (args: User) => void;
-  initialUser: User;
-  user: User;
-};
+const Nav: FC = () => {
+  const [user, setUser] = useState(new User());
 
-const Nav: FC<NavProps> = ({ setUser, initialUser, user }) => {
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get<typeof user>("/users/me");
+        setUser(
+          new User(
+            data.id,
+            data.firstname,
+            data.lastname,
+            data.email,
+            new Role(data.role.id, data.role.name)
+          )
+        );
+      } catch (err) {
+        alert("load fail");
+      }
+    })();
+  }, []);
+
   const onLogoutClick = async () => {
     try {
       await axios("/users/logout");
-      setUser(initialUser);
+      // setIsLoggedIn(false);
     } catch (err) {
       alert("err");
     }
@@ -28,7 +44,7 @@ const Nav: FC<NavProps> = ({ setUser, initialUser, user }) => {
         Company name
       </Link>
       <Link className="p-2 text-white text-decoration-none" to="/profile">
-        {user.firstname}
+        {user.name}
       </Link>
       <div className="navbar-nav">
         <div className="nav-item text-nowrap">

@@ -1,44 +1,30 @@
 import axios from "axios";
 import { FC, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { User } from "../model/user";
 import Menu from "./Menu";
 import Nav from "./Nav";
-export type User = {
-  firstname: string;
-  lastname: string;
-  email: string;
-  role: {
-    name: string;
-    id: number;
-  };
-};
 
-const initialUser = {
-  firstname: "",
-  lastname: "",
-  email: "",
-  role: { name: "", id: 0 },
-};
 const Wrapper: FC = ({ children }) => {
-  const navigate = useNavigate();
-
-  const [user, setUser] = useState<User>(initialUser);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get<User>("/users/me");
-        setUser(data);
+        await axios.get("/users/me");
       } catch (err) {
-        navigate("/login");
+        setIsLoggedIn(false);
       }
     })();
+  }, []);
 
-    return () => setUser(initialUser);
-  }, [navigate]);
+  if (!isLoggedIn) {
+    return <Navigate to="/login" />;
+  }
+
   return (
     <>
-      <Nav user={user} setUser={setUser} initialUser={initialUser} />
+      <Nav />
 
       <div className="container-fluid">
         <div className="row">

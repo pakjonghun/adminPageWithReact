@@ -13,16 +13,18 @@ type LocationProps = {
 const Login: FC = () => {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
-  useEffect(() => {
-    return () => setIsLoggedIn(false);
-  });
-
+  const lo = location.state as LocationProps;
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm({ mode: "onChange" });
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      email: lo?.email ? lo.email : "",
+      password: lo?.password ? lo.password : "",
+    },
+  });
 
   const onSubmit: SubmitHandler<FieldValues> = async (value) => {
     try {
@@ -32,7 +34,6 @@ const Login: FC = () => {
       alert("err");
     }
   };
-  const lo = location.state as LocationProps;
 
   if (isLoggedIn) return <Navigate to="/dashboard" />;
 
@@ -43,7 +44,6 @@ const Login: FC = () => {
 
         <label htmlFor="floatingInput">Email address</label>
         <input
-          value={lo?.email ? lo.email : ""}
           {...register("email", {
             required: { value: true, message: "input email" },
             pattern: {
@@ -55,10 +55,11 @@ const Login: FC = () => {
           id="floatingInput"
           placeholder="name@example.com"
         />
-        {errors?.email && <ErrorMessage message={errors.email.message} />}
+        {errors?.email?.message && (
+          <ErrorMessage message={errors.email.message} />
+        )}
         <label htmlFor="floatingPassword">Password</label>
         <input
-          value={lo?.password ? lo.password : ""}
           {...register("password", {
             required: { value: true, message: "password plz" },
           })}
@@ -67,7 +68,9 @@ const Login: FC = () => {
           id="floatingPassword"
           placeholder="Password"
         />
-        {errors?.password && <ErrorMessage message={errors.password.message} />}
+        {errors?.password?.message && (
+          <ErrorMessage message={errors.password.message} />
+        )}
 
         <SubmitBtn
           passValid={isValid}
