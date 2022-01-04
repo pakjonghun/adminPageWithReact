@@ -11,41 +11,26 @@ type UsersType = {
 const Users = () => {
   const [user, setUser] = useState<IUser[]>([]);
   const [meta, setMeta] = useState<Meta>({ page: 0, total: 0, lastPage: 0 });
+  const [page, setPage] = useState<number>(0);
 
-  const next = async () => {
-    if (meta.page + 1 === meta.lastPage) return alert("last page");
-    try {
-      const { data } = await axios.get<UsersType>(
-        `/users?page=${meta.page + 1}`
-      );
-      setUser(data.data);
-      setMeta(data.meta);
-    } catch (error) {
-      alert("error");
-    }
+  const next = () => {
+    if (page + 1 === meta.lastPage) return alert("last page");
+    setPage(page + 1);
   };
 
-  const previous = async () => {
-    if (!meta.page) return alert("first page");
-    try {
-      const { data } = await axios.get<UsersType>(
-        `/users?page=${meta.page - 1}`
-      );
-      setUser(data.data);
-      setMeta(data.meta);
-    } catch (error) {
-      alert("error");
-    }
+  const previous = () => {
+    if (!page) return alert("first page");
+    setPage(page - 1);
   };
 
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get<UsersType>("/users");
+      const { data } = await axios.get<UsersType>(`/users?page=${page}`);
       setUser(data.data);
       setMeta(data.meta);
     })();
-  }, []);
-  console.log(meta);
+  }, [page, setUser, setMeta]);
+
   return (
     <Wrapper>
       <div className="table-responsive">
