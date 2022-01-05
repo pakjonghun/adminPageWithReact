@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import RoleCreate from "./pages/roles/CreateRole";
 import RoleEdit from "./pages/roles/EditRole";
 import Roles from "./pages/roles/Roles";
+import Profile from "./pages/user/Profile";
 import UserCreate from "./pages/user/UserCreate";
 import UserEdit from "./pages/user/UserEdit";
 import Users from "./pages/user/Users";
@@ -25,6 +26,7 @@ function App() {
           <Route path="/users" element={<Users />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/users">
             <Route path="create" element={<UserCreate />} />
             <Route path=":id/edit" element={<UserEdit />} />
