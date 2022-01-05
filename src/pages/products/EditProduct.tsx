@@ -12,7 +12,7 @@ type Meta = {
   lastPage: number;
 };
 
-const ProductCreate: FC = () => {
+const ProductEdit: FC = () => {
   const [image, setImage] = useState<File | null>(null);
   const [permissions, setPermissions] = useState<IPermission[]>([
     { id: 0, name: "" },
@@ -134,4 +134,4 @@ const SubmitBtn = styled.button<{ passValid: boolean }>`
   opacity: ${({ passValid }) => (passValid ? 1 : 0.5)};
 `;
 
-export default ProductCreate;
+export default ProductEdit;

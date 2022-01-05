@@ -8,12 +8,13 @@ import { IProducts } from "../../model/products";
 const Products = () => {
   const [products, setProducts] = useState<IProducts[]>([]);
   const [meta, setMeta] = useState<Meta>({ total: 0, lastPage: 0, page: 0 });
+  const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
     try {
       (async () => {
         const { data } = await axios.get<{ data: IProducts[]; meta: Meta }>(
-          "/products"
+          `/products?page=${page}`
         );
         setProducts(data.data);
         setMeta(data.meta);
@@ -21,7 +22,26 @@ const Products = () => {
     } catch (err) {
       alert("err");
     }
-  }, []);
+  }, [page]);
+
+  const onDelete = async (id: number) => {
+    try {
+      await axios.delete(`/products/${id}`);
+      setProducts((pre) => pre.filter((item) => item.id !== id));
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  const next = async () => {
+    if (page === meta.lastPage) return alert("last page");
+    setPage((pre) => pre + 1);
+  };
+
+  const previous = async () => {
+    if (page === 1) return alert("first page");
+    setPage((pre) => pre - 1);
+  };
 
   return (
     <Wrapper>
@@ -58,7 +78,7 @@ const Products = () => {
                   <div className="btn-group mr-2">
                     <Link
                       to="#"
-                      // onClick={() => onDelete(item.id)}
+                      onClick={() => onDelete(item.id)}
                       className="btn btn-sm btn-outline-secondary"
                     >
                       Delete
@@ -66,7 +86,7 @@ const Products = () => {
                   </div>
                   <div className="btn-group mr-2">
                     <Link
-                      to={`/roles/${item.id}/edit`}
+                      to={`/products/${item.id}/edit`}
                       className="btn btn-sm btn-outline-secondary"
                       state={item}
                     >
@@ -82,14 +102,14 @@ const Products = () => {
       <nav>
         <ul className="pagenation">
           <li className="page-item">
-            {/* <Link to="#" className="page-link" onClick={previous}>
+            <Link to="#" className="page-link" onClick={previous}>
               Previous
-            </Link> */}
+            </Link>
           </li>
           <li className="page-item">
-            {/* <Link to="#" className="page-link" onClick={next}>
+            <Link to="#" className="page-link" onClick={next}>
               Next
-            </Link> */}
+            </Link>
           </li>
         </ul>
       </nav>
