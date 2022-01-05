@@ -38,10 +38,18 @@ const Orders = () => {
     }
   }, [page]);
 
-  const onDelete = async (id: number) => {
+  const onDownload = async () => {
     try {
-      await axios.delete(`/orders/${id}`);
-      setOrders((orders) => orders.filter((order) => order.id !== id));
+      const { data } = await axios.get("/orders/extract", {
+        responseType: "blob",
+      });
+
+      // const blob = new Blob([data], { type: "text/csv" });
+      const url = window.URL.createObjectURL(data);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "orders.csv";
+      a.click();
     } catch (err) {
       alert(err);
     }
@@ -79,13 +87,10 @@ const Orders = () => {
                   <td>{item.createdAt}</td>
                   <td>
                     <button
-                      onClick={() => onDelete(item.id)}
+                      onClick={onDownload}
                       className="btn btn-sm btn-outline-secondary"
                     >
-                      delete
-                    </button>
-                    <button className="btn btn-sm btn-outline-secondary">
-                      edit
+                      Download
                     </button>
                   </td>
                 </tr>
