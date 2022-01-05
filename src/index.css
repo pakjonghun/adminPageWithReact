@@ -18,3 +18,13 @@ li {
   margin-left: -0.7rem;
   margin-top: 0.5rem;
 }
+
+.hidden {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.show {
+  max-height: fit-content;
+  overflow: auto;
+}
