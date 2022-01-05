@@ -19,12 +19,15 @@ li {
   margin-top: 0.5rem;
 }
 
+.innerTable {
+  overflow: scroll;
+  transition: all 0.5s linear;
+}
+
 .hidden {
   max-height: 0;
-  overflow: hidden;
 }
 
 .show {
-  max-height: fit-content;
-  overflow: auto;
+  max-height: 100px;
 }

@@ -91,7 +91,11 @@ const Orders = () => {
                 </tr>
                 <tr>
                   <td colSpan={6}>
-                    <div className={item.selected ? "show" : "hidden"}>
+                    <div
+                      className={`innerTable ${
+                        item.selected ? "show" : "hidden"
+                      }`}
+                    >
                       <table className="table table-sm">
                         <thead>
                           <tr>
