@@ -4,6 +4,7 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
 import styled from "styled-components";
 import ErrorMessage from "../../components/ErrorMessage";
+import ImageUpload from "../../components/ImageUpload";
 import { IPermission } from "../../model/permission";
 
 type Meta = {
@@ -13,24 +14,8 @@ type Meta = {
 };
 
 const ProductCreate: FC = () => {
-  const [image, setImage] = useState<File | null>(null);
-  const [permissions, setPermissions] = useState<IPermission[]>([
-    { id: 0, name: "" },
-  ]);
-  const [meta, setMeta] = useState<Meta>({ total: 0, page: 0, lastPage: 0 });
+  const [image, setImage] = useState<string>("");
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
-
-  const [choicePer, setChoicePer] = useState<Array<number>>([]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        console.log("hellow");
-      } catch (err) {
-        alert("err");
-      }
-    })();
-  }, []);
 
   const {
     register,
@@ -39,10 +24,11 @@ const ProductCreate: FC = () => {
   } = useForm({ mode: "onChange" });
 
   const onSubmit: SubmitHandler<FieldValues> = async (value) => {
+    console.log(11, image);
     try {
-      const file = new FormData();
+      // const file = new FormData();
       // file.append("file", image, "image");
-      await axios.post("/products/register", { ...value, image: file });
+      await axios.post("/products/register", { ...value, image });
 
       setIsRegistered(true);
     } catch (e) {
@@ -50,9 +36,14 @@ const ProductCreate: FC = () => {
     }
   };
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files?.[0]) return;
-    setImage(event.target.files?.[0]);
+  const onChange = (value: string) => {
+    // if (!event.target.files?.[0]) return;
+    // setImage(event.target.files?.[0]);
+    setImage(value);
+  };
+
+  const upload = (url: string) => {
+    setImage(url);
   };
 
   if (isRegistered) {
@@ -78,7 +69,7 @@ const ProductCreate: FC = () => {
         )}
 
         <label htmlFor="floatingInput">Product description</label>
-        <input
+        <textarea
           {...register("description", {
             required: { value: true, message: "input description" },
           })}
@@ -104,17 +95,10 @@ const ProductCreate: FC = () => {
           <ErrorMessage message={errors.price.message} />
         )}
 
-        <div className="mb-3">
-          <label htmlFor="formFile" className="form-label">
-            Default file input example
-          </label>
-          <input
-            className="form-control"
-            accept="image/png image/jpeg"
-            type="file"
-            id="formFile"
-            onChange={onChange}
-          />
+        <div className="input-group">
+          <label htmlFor="image">Upload</label>
+          <input value={image} readOnly className="form-control" id="image" />
+          <ImageUpload cb={upload} />
         </div>
 
         <SubmitBtn

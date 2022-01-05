@@ -1,58 +1,51 @@
 import axios from "axios";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import ErrorMessage from "../../components/ErrorMessage";
-import { IPermission } from "../../model/permission";
-
-type Meta = {
-  total: number;
-  page: number;
-  lastPage: number;
-};
+import ImageUpload from "../../components/ImageUpload";
+import { IProducts } from "../../model/products";
 
 const ProductEdit: FC = () => {
-  const [image, setImage] = useState<File | null>(null);
-  const [permissions, setPermissions] = useState<IPermission[]>([
-    { id: 0, name: "" },
-  ]);
-  const [meta, setMeta] = useState<Meta>({ total: 0, page: 0, lastPage: 0 });
+  const state = useLocation();
+  const lo = state.state as IProducts;
+  const ref = useRef<HTMLInputElement>(null);
+
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
 
-  const [choicePer, setChoicePer] = useState<Array<number>>([]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        console.log("hellow");
-      } catch (err) {
-        alert("err");
-      }
-    })();
-  }, []);
+  const [image, setImage] = useState<string>();
+  const upload = (url: string) => {
+    if (ref.current) {
+      ref.current.value = url;
+    }
+    setImage(url);
+  };
 
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm({ mode: "onChange" });
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      title: lo.title,
+      description: lo.description,
+      price: lo.price,
+    },
+  });
 
   const onSubmit: SubmitHandler<FieldValues> = async (value) => {
     try {
-      const file = new FormData();
-      // file.append("file", image, "image");
-      await axios.post("/products/register", { ...value, image: file });
+      await axios.put(`/products/${lo.id}`, {
+        ...value,
+        ...(image && { image }),
+      });
 
       setIsRegistered(true);
     } catch (e) {
       alert("registe failed");
     }
-  };
-
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files?.[0]) return;
-    setImage(event.target.files?.[0]);
   };
 
   if (isRegistered) {
@@ -104,17 +97,15 @@ const ProductEdit: FC = () => {
           <ErrorMessage message={errors.price.message} />
         )}
 
-        <div className="mb-3">
-          <label htmlFor="formFile" className="form-label">
-            Default file input example
-          </label>
+        <div className="input-group">
+          <label htmlFor="image">Upload</label>
           <input
+            ref={ref}
+            defaultValue={lo.image}
             className="form-control"
-            accept="image/png image/jpeg"
-            type="file"
-            id="formFile"
-            onChange={onChange}
+            id="image"
           />
+          <ImageUpload cb={upload} />
         </div>
 
         <SubmitBtn

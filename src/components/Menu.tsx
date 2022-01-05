@@ -38,6 +38,11 @@ const Menu = () => {
               Product
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink to="/orders" className="nav-link active">
+              Order
+            </NavLink>
+          </li>
         </ul>
       </div>
     </nav>

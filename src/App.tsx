@@ -4,6 +4,7 @@ import "./App.css";
 
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import Orders from "./pages/orders/Orders";
 import ProductCreate from "./pages/products/CreateProducts";
 import ProductEdit from "./pages/products/EditProduct";
 import Products from "./pages/products/Products";
@@ -37,6 +38,9 @@ function App() {
             <Route path="" element={<Products />} />
             <Route path="create" element={<ProductCreate />} />
             <Route path=":id/edit" element={<ProductEdit />} />
+          </Route>
+          <Route path="/orders">
+            <Route path="" element={<Orders />} />
           </Route>
         </Routes>
       </BrowserRouter>
