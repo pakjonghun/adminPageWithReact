@@ -33,6 +33,11 @@ const Menu = () => {
               Role
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink to="/products" className="nav-link active">
+              Product
+            </NavLink>
+          </li>
         </ul>
       </div>
     </nav>

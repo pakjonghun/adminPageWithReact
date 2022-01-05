@@ -4,6 +4,8 @@ import "./App.css";
 
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import ProductCreate from "./pages/products/CreateProducts";
+import Products from "./pages/products/Products";
 import Register from "./pages/Register";
 import RoleCreate from "./pages/roles/CreateRole";
 import RoleEdit from "./pages/roles/EditRole";
@@ -29,6 +31,9 @@ function App() {
             <Route path="" element={<Roles />} />
             <Route path="create" element={<RoleCreate />} />
             <Route path=":id/edit" element={<RoleEdit />} />
+          </Route>
+          <Route path="/products" element={<Products />}>
+            <Route path="create" element={<ProductCreate />} />
           </Route>
         </Routes>
       </BrowserRouter>
