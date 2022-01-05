@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Pagnator from "../../components/Pagnator";
 import Wrapper from "../../components/Wrapper";
 import { IRole } from "../../model/role";
 
@@ -13,7 +14,7 @@ type Meta = {
 const Roles = () => {
   const [meta, setMeta] = useState<Meta>({ page: 1, total: 0, lastPage: 0 });
   const [roles, setRoles] = useState<IRole[]>([{ id: 0, name: "" }]);
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
 
   const onDelete = async (id: number) => {
     try {
@@ -24,16 +25,6 @@ const Roles = () => {
     } catch (err) {
       alert(err);
     }
-  };
-
-  const next = async () => {
-    if (page + 1 === meta.lastPage) return alert("last page");
-    setPage((pre) => pre + 1);
-  };
-
-  const previous = async () => {
-    if (!page) return alert("first page");
-    setPage((pre) => pre - 1);
   };
 
   useEffect(() => {
@@ -101,20 +92,7 @@ const Roles = () => {
           </tbody>
         </table>
       </div>
-      <nav>
-        <ul className="pagenation">
-          <li className="page-item">
-            <Link to="#" className="page-link" onClick={previous}>
-              Previous
-            </Link>
-          </li>
-          <li className="page-item">
-            <Link to="#" className="page-link" onClick={next}>
-              Next
-            </Link>
-          </li>
-        </ul>
-      </nav>
+      <Pagnator lastPage={meta.lastPage} setPage={setPage} />
     </Wrapper>
   );
 };

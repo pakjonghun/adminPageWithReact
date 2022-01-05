@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Pagnator from "../../components/Pagnator";
 import Wrapper from "../../components/Wrapper";
 import { Meta } from "../../model/meta";
 import { IProducts } from "../../model/products";
@@ -31,16 +32,6 @@ const Products = () => {
     } catch (err) {
       alert(err);
     }
-  };
-
-  const next = async () => {
-    if (page === meta.lastPage) return alert("last page");
-    setPage((pre) => pre + 1);
-  };
-
-  const previous = async () => {
-    if (page === 1) return alert("first page");
-    setPage((pre) => pre - 1);
   };
 
   return (
@@ -99,20 +90,7 @@ const Products = () => {
           </tbody>
         </table>
       </div>
-      <nav>
-        <ul className="pagenation">
-          <li className="page-item">
-            <Link to="#" className="page-link" onClick={previous}>
-              Previous
-            </Link>
-          </li>
-          <li className="page-item">
-            <Link to="#" className="page-link" onClick={next}>
-              Next
-            </Link>
-          </li>
-        </ul>
-      </nav>
+      <Pagnator lastPage={meta.lastPage} setPage={setPage} />
     </Wrapper>
   );
 };
